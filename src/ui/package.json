@@ -1,0 +1,49 @@
+{
+  "name": "ui",
+  "version": "0.1.1-SNAPSHOT",
+  "private": true,
+  "scripts": {
+    "serve": "npm run lint && vue-cli-service serve",
+    "lint": "vue-cli-service lint",
+    "copy": "cp -r src/assets target/dist/static && cp src/assets/favicon.ico target/dist/",
+    "build": "vue-cli-service build --mode production && npm run copy"
+  },
+  "dependencies": {
+    "@vue/cli-plugin-eslint": "5.0.8",
+    "bootstrap-vue": "2.23.1",
+    "bootstrap": "5.2.3",
+    "vue": "2.7.14",
+    "vue-toast-notification": "0.6.3",
+    "vuex": "3.6.2"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "6.3.0",
+    "@vue/cli-service": "5.0.8",
+    "eslint-config-google": "0.14.0",
+    "eslint-plugin-vue": "9.10.0",
+    "lint": "1.1.2",
+    "vue-template-compiler": "2.7.14"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=16.13.2 <19"
+  }
+}
