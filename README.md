@@ -1,68 +1,61 @@
-# Point of Sale (PoS)
+# Terraform Dynamic Java Application on GKE
 
-**Point of Sale** is a sample application that simulates a retail store kiosk
-used to submit and track orders and payments.
+## Quickstart
 
-This application is used by Google to demonstrate use cases where
-[Anthos](https://cloud.google.com/anthos) clusters are installed and run outside
-of Google Cloud Platform _(i.e. on premise bare metal infrastructure)_. The
-application is representative of **edge deployments** like that of retail
-store-front devices.
+Try out the Terraform in this repository.
 
-This repository also hosts a collection of samples and walkthroughs that enables
-learning and experimenting with [Anthos](https://cloud.google.com/anthos) for
-edge use cases. All of the samples and walkthroughs are built around the
-**Point of Sale** application.
+### Prerequisites
 
-> 👓 **Note:** Anthos clusters means Kubernetes clusters that are managed by Anthos.
+* The Terraform has only been tested on [Google Cloud Shell](https://cloud.google.com/shell).
+* You environment will need:
+    * `terraform`
+    * `gcloud`
+    * `kubectl`
+    * `sed`
 
-If you’re using this app, please ★Star the repository to show your interest!
+### Steps
 
-> 👓 **Note to Googlers:** Please fill out the form at [go/using-pos](http://go/using-pos) if you are using this application.
+#### 1. Clone this git repository.
 
-<p align="center">
-    <img src="docs/images/pos.png">
-</p>
+```
+git clone https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale
+```
 
-### Play with it:
-- Latest release: [abm-pos.com](http://abm-pos.com)
-- Build from **main** branch: [staging.abm-pos.com](http://staging.abm-pos.com)
----
+#### 2. Go into the `infra/` folder.
 
-### Edge computing
+```
+cd terraform-example-java-dynamic-point-of-sale/infra
+```
 
-Edge computing is a distributed computing paradigm that brings computation and
-data storage closer to the location where the action is, to improve response
-times and save bandwidth. Multiple industries _(e.g. Retail, Telecommunication,
-Manufacturing and Energy)_ are facing a growing demand to provide localized,
-consistent, low latency services that expose compute services. Workloads range
-from order management, ML for images/traffic analysis/safety, device management
-like refrigeration, fryers, etc. [Anthos clusters on Bare Metal](https://cloud.google.com/anthos/clusters/docs/bare-metal) and [Anthos cluster on VMware](https://cloud.google.com/anthos/clusters/docs/on-prem)
-are unique solutions for deploying and managing workloads on clusters
-distributed across customer data centers and device fleets.
+#### 3. Run the Terraform.
 
----
+```
+terraform init
+terraform apply -var 'project_id=MY_PROJECT_ID'
+```
 
-### Resources
-- _(Quickstart)_ [Deploy this application to a cluster](/docs/quickstart.md)
-- _(Anthos VMRuntime)_ [Run the entire application in a VM](/extras/anthos-vmruntime)
+Replace `MY_PROJECT_ID` with your [Google Cloud Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects) ID. We recommend creating a new project so you can easily clean up all resources by deleting the entire project.
 
-#### External use cases of this application
-- _(Solution guide)_ [VM based PoS deployed in an Anthos cluster using Anthos VMRuntime](https://github.com/GoogleCloudPlatform/anthos-samples/tree/main/anthos-vmruntime)
-- _(Solution guide)_ [Edge deployment of PoS using Anthos on bare metal](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/installing/install-edge-profile)
-- _(Tutorial)_ [PoS deployed in an Anthos bare metal cluster inside Openstack](https://cloud.google.com/anthos/clusters/docs/bare-metal/latest/installing/openstack-abm-install)
+You may need to type "Yes", when after you run `terraform apply`.
 
----
+#### 4. Report any bugs as a GitHub Issue.
 
-### Development and Contributing
-- Read the [CONTRIBUTING guide](/CONTRIBUTING.md) for instructions on how to contribute
-- Follow the [local development guide](/docs/local-dev.md) to learn how to run and develop this app locally
+a. Search the [existing list of GitHub](https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale/issues?q=is%3Aissue).
 
----
-### Releases
-This repository follows [semantic-versioning](https://semver.org/) to version
-its files. Please read [`Releasing a new version of the Point of Sale Application`](/docs/release.md)
-for detailed explanation on how to cut a release for this repository.
+b. If there isn't already a GitHub issue for your bug, [create a new GitHub issue](https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale/issues/new/choose).
 
-See the [domain mapping](/docs/domain-mapping.md) guide for information on how
-to expose the application using a public domain.
+#### 5. Get the IP address of the deployment.
+
+TBD
+
+## Contributing
+
+If you would like to contribute to this repository, read [CONTRIBUTING](CONTRIBUTING.md).
+
+Please note that this project is released with a Contributor Code of Conduct. By participating in
+this project you agree to abide by its terms. See [Code of Conduct](CODE_OF_CONDUCT.md) for more
+information.
+
+## License
+
+Apache 2.0 - See [LICENSE](LICENSE) for more information.
