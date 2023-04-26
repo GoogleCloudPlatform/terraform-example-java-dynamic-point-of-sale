@@ -14,16 +14,6 @@
  * limitations under the License.
  */
 
-variable "cluster_endpoint" {
-  type        = string
-  description = "The Google Cloud project ID."
-}
-
-variable "cluster_ca_certificate" {
-  type        = string
-  description = "The Google Cloud project ID."
-}
-
 variable "helm_values" {
   description = "Custom values to be merged into values yaml."
   default     = []

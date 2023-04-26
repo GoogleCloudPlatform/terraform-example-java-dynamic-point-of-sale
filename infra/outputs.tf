@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-output "deployment_ip_address" {
-  description = "Public IP address of the deployment"
-  value       = resource.google_compute_global_address.multi_cluster_ingress_ip_address.address
-}
+# output "deployment_ip_address" {
+#   description = "Public IP address of the deployment"
+#   value       = resource.google_compute_global_address.multi_cluster_ingress_ip_address.address
+# }
 
 output "neos_toc_url" {
   description = "Neos Tutorial URL"

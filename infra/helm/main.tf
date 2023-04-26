@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 
-// Enable access to the configuration of the Google Cloud provider.
-data "google_client_config" "default" {}
-
-provider "helm" {
-  kubernetes {
-    host                   = var.cluster_endpoint
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(var.cluster_ca_certificate)
-  }
-}
-
 resource "helm_release" "jss_point_of_sale" {
   name  = "jss-point-of-sale"
   chart = "${path.module}/pos-charts"
@@ -33,7 +22,7 @@ resource "helm_release" "jss_point_of_sale" {
   ]
 
   dynamic "set" {
-    for_each = var.entries == null ? [] : var.entries
+    for_each = var.helm_values == null ? [] : var.helm_values
     iterator = entry
     content {
       name  = entry.value.name
@@ -42,7 +31,7 @@ resource "helm_release" "jss_point_of_sale" {
   }
 
   dynamic "set_sensitive" {
-    for_each = var.secret_entries == null ? [] : var.secret_entries
+    for_each = var.helm_secret_values == null ? [] : var.helm_secret_values
     iterator = secret_entry
     content {
       name  = secret_entry.value.name

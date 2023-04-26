@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
+locals {
+  cluster_endpoint       = "https://${google_container_cluster.jss_pos_cluster.endpoint}"
+  cluster_ca_certificate = google_container_cluster.jss_pos_cluster.master_auth[0].cluster_ca_certificate
+}
+
+// Enable access to the configuration of the Google Cloud provider.
+data "google_client_config" "default" {}
+
 provider "google" {
   project = var.project_id
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = local.cluster_endpoint
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
+  }
 }
 
 provider "google-beta" {
@@ -82,9 +98,7 @@ module "helm" {
   depends_on = [
     google_container_cluster.jss_pos_cluster,
   ]
-  source                 = "./helm"
-  cluster_endpoint       = "https://${google_container_cluster.jss_pos_cluster.endpoint}"
-  cluster_ca_certificate = google_container_cluster.jss_pos_cluster.master_auth[0].cluster_ca_certificate
-  entries = []
-  secret_entries = []
+  source             = "./helm"
+  helm_values        = []
+  helm_secret_values = []
 }
