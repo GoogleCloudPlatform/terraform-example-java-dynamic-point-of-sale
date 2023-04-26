@@ -6,4 +6,22 @@ Thank you for opening a Pull Request! Before submitting your PR, there are a few
 - [ ] Appropriate docs were updated (if necessary)
 - [ ] Provide instructions for reviewers.
 
-🛠️ Fixes #<issue_number_goes_here>
+---
+## Fixes #<issue_number_goes_here>
+
+### Description
+<!-- What are you addressing? -->
+- I found this aweseom bug/improvement I want to contribute
+
+### Changes
+<!-- What changes did you make to the files -->
+- Change 1
+- Change 2
+
+### Steps to test
+<!-- Notes and other details about the PR for the reviewer -->
+- N/A
+
+### Related PRs
+<!-- Any other PRs related to this -->
+- N/A

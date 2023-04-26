@@ -12,21 +12,21 @@ Someone else might have already reported the issue. Please double check the exis
 If you have a support contract with Google, please create an issue in the [support console](https://cloud.google.com/support/) instead of filing on GitHub. This will ensure a timely response.
 -->
 
-#### Environment details
+### Description
+- What are you seeing and what needs to be done?
 
-- Operating System:
-- Terraform version:
-- gcloud version:
-- kubectl version:
+---
 
-#### Steps to reproduce
+### Environment details
+
+- **Operating System:**
+- **Terraform version:**
+- **gcloud version:**
+- **kubectl version:**
+
+---
+
+### Steps to reproduce
 
   1. ?
   2. ?
-
-
-<!--
-Making sure to follow these steps will guarantee the quickest resolution possible.
-
-Thanks!
--->
