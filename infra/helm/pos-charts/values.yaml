@@ -13,4 +13,4 @@
 # limitations under the License.
 
 # This values.yaml file contains default values for the Helm chart.
-resourceNameSuffix: "-1"
+loadbalancer_ip: ${LOADBALANCER_IP}

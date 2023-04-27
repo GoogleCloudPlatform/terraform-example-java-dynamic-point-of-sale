@@ -14,15 +14,20 @@
  * limitations under the License.
  */
 
+// Load the default client configuration used by the Google Cloud provider.
+data "google_client_config" "default" {}
+
+
 locals {
   cluster_endpoint       = "https://${google_container_cluster.jss_pos_cluster.endpoint}"
   cluster_ca_certificate = google_container_cluster.jss_pos_cluster.master_auth[0].cluster_ca_certificate
 }
 
-// Enable access to the configuration of the Google Cloud provider.
-data "google_client_config" "default" {}
-
 provider "google" {
+  project = var.project_id
+}
+
+provider "google-beta" {
   project = var.project_id
 }
 
@@ -32,10 +37,6 @@ provider "helm" {
     token                  = data.google_client_config.default.access_token
     cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
   }
-}
-
-provider "google-beta" {
-  project = var.project_id
 }
 
 module "enable_google_apis" {
@@ -49,7 +50,7 @@ module "enable_google_apis" {
     "dns.googleapis.com",
     "gkehub.googleapis.com",
     "iam.googleapis.com",
-    "monitoring.googleapis.com ",
+    "monitoring.googleapis.com",
   ]
 }
 
@@ -64,9 +65,20 @@ resource "google_service_account" "jss_pos_service_account" {
   project      = var.project_id
 }
 
-resource "google_container_cluster" "jss_pos_cluster" {
+resource "google_compute_address" "jss_pos_ip" {
   depends_on = [
     module.enable_google_apis
+  ]
+  name         = "jss-pos-ip-${var.resource_name_suffix}"
+  project      = var.project_id
+  region       = var.region
+  address_type = "EXTERNAL"
+}
+
+resource "google_container_cluster" "jss_pos_cluster" {
+  depends_on = [
+    module.enable_google_apis,
+    google_compute_address.jss_pos_ip,
   ]
   # Needed for the google_gkehub_feature Terraform module.
   provider = google-beta
@@ -97,8 +109,14 @@ resource "google_container_cluster" "jss_pos_cluster" {
 module "helm" {
   depends_on = [
     google_container_cluster.jss_pos_cluster,
+    google_compute_address.jss_pos_ip,
   ]
-  source             = "./helm"
-  helm_values        = []
+  source = "./helm"
+  helm_values = [
+    {
+      name  = "loadbalancer_ip"
+      value = google_compute_global_address.jss_pos_ip.address
+    },
+  ]
   helm_secret_values = []
 }

@@ -28,9 +28,9 @@ variable "region" {
 variable "labels" {
   type = map(string)
   default = {
-    "jss" : "up-2.2",
-    "application" : "Point-of-sale",
-    "description" : "Dynamic Java application on GKE"
+    "jss" : "up-2-2",
+    "application" : "point-of-sale",
+    "description" : "dynamic-java-application-gke"
   }
   description = <<EOT
     A set of key/value label pairs to assign to the resources deployed by this
