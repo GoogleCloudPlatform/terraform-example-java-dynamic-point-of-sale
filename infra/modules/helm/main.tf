@@ -16,9 +16,9 @@
 
 resource "helm_release" "jss_point_of_sale" {
   name  = "jss-point-of-sale"
-  chart = "${path.module}/pos-charts"
+  chart = "${path.module}/charts"
   values = [
-    file("${path.module}/pos-charts/values.yaml"),
+    file("${path.module}/charts/values.yaml"),
   ]
 
   dynamic "set" {

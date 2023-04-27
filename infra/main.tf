@@ -19,8 +19,8 @@ data "google_client_config" "default" {}
 
 
 locals {
-  cluster_endpoint       = "https://${google_container_cluster.jss_pos_cluster.endpoint}"
-  cluster_ca_certificate = google_container_cluster.jss_pos_cluster.master_auth[0].cluster_ca_certificate
+  cluster_endpoint       = "https://${google_container_cluster.jss_pos.endpoint}"
+  cluster_ca_certificate = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
 }
 
 provider "google" {
@@ -54,45 +54,64 @@ module "enable_google_apis" {
   ]
 }
 
-resource "google_service_account" "jss_pos_service_account" {
-  depends_on = [
-    module.enable_google_apis
-  ]
-
-  account_id   = "jss-pos-service-account-${var.resource_name_suffix}"
-  display_name = "jss-pos-service-account-${var.resource_name_suffix}"
+resource "google_service_account" "jss_pos" {
+  depends_on   = [module.enable_google_apis]
+  account_id   = "jss-pos-${var.resource_name_suffix}"
+  display_name = "jss-pos-${var.resource_name_suffix}"
   description  = "Service Account used by the Dynamic Point-of-sale Java App Jump Start Solution"
   project      = var.project_id
 }
 
-resource "google_compute_address" "jss_pos_ip" {
-  depends_on = [
-    module.enable_google_apis
-  ]
-  name         = "jss-pos-ip-${var.resource_name_suffix}"
+resource "google_compute_network" "jss_pos" {
+  depends_on              = [module.enable_google_apis]
+  project                 = var.project_id
+  name                    = "jss-pos-${var.resource_name_suffix}"
+  auto_create_subnetworks = true
+}
+
+resource "random_password" "jss_pos_sql" {
+  length           = 20
+  min_lower        = 4
+  min_numeric      = 4
+  min_upper        = 4
+  override_special = "!#%*()-_=+[]{}:?"
+}
+
+module "database" {
+  depends_on           = [module.enable_google_apis]
+  source               = "./modules/database"
+  region               = var.region
+  private_network_id   = google_compute_network.jss_pos.id
+  sql_user_password    = random_password.jss_pos_sql.result
+  availability_type    = "REGIONAL"
+  resource_name_suffix = var.resource_name_suffix
+}
+
+resource "google_compute_address" "jss_pos" {
+  depends_on   = [module.enable_google_apis]
+  name         = "jss-pos-${var.resource_name_suffix}"
   project      = var.project_id
   region       = var.region
   address_type = "EXTERNAL"
 }
 
-resource "google_container_cluster" "jss_pos_cluster" {
+resource "google_container_cluster" "jss_pos" {
   depends_on = [
     module.enable_google_apis,
-    google_compute_address.jss_pos_ip,
+    google_compute_address.jss_pos,
   ]
-  # Needed for the google_gkehub_feature Terraform module.
-  provider = google-beta
-  # -----------
 
-  name             = "jss-pos-cluster-${var.resource_name_suffix}"
+  provider         = google-beta # Needed for the google_gkehub_feature Terraform module.
+  name             = "jss-pos-${var.resource_name_suffix}"
   project          = var.project_id
   location         = var.region
-  enable_autopilot = true
   resource_labels  = var.labels
+  network          = google_compute_network.jss_pos.id
+  enable_autopilot = true
 
   cluster_autoscaling {
     auto_provisioning_defaults {
-      service_account = google_service_account.jss_pos_service_account.email
+      service_account = google_service_account.jss_pos.email
     }
   }
 
@@ -102,20 +121,20 @@ resource "google_container_cluster" "jss_pos_cluster" {
   }
 
   node_config {
-    service_account = google_service_account.jss_pos_service_account.email
+    service_account = google_service_account.jss_pos.email
   }
 }
 
 module "helm" {
   depends_on = [
-    google_container_cluster.jss_pos_cluster,
-    google_compute_address.jss_pos_ip,
+    google_container_cluster.jss_pos,
+    google_compute_address.jss_pos,
   ]
-  source = "./helm"
+  source = "./modules/helm"
   helm_values = [
     {
       name  = "loadbalancer_ip"
-      value = google_compute_address.jss_pos_ip.address
+      value = google_compute_address.jss_pos.address
     },
   ]
   helm_secret_values = []
