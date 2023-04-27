@@ -115,7 +115,7 @@ module "helm" {
   helm_values = [
     {
       name  = "loadbalancer_ip"
-      value = google_compute_global_address.jss_pos_ip.address
+      value = google_compute_address.jss_pos_ip.address
     },
   ]
   helm_secret_values = []
