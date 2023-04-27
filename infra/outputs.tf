@@ -23,3 +23,8 @@ output "neos_toc_url" {
   description = "Neos Tutorial URL"
   value       = "https://console.cloud.google.com/products/solutions/deployments?walkthrough_id=solutions-in-console--java-dynamic-gke--java-dynamic-gke_tour"
 }
+
+output "pos_application_url" {
+  description = "The public URL of the Point-of-sale application"
+  value       = "http://${google_compute_address.jss_pos.address}"
+}
