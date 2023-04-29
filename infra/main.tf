@@ -14,29 +14,9 @@
  * limitations under the License.
  */
 
-// Load the default client configuration used by the Google Cloud provider.
-data "google_client_config" "default" {}
-
-
 locals {
   cluster_endpoint       = "https://${google_container_cluster.jss_pos.endpoint}"
   cluster_ca_certificate = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
-}
-
-provider "google" {
-  project = var.project_id
-}
-
-provider "google-beta" {
-  project = var.project_id
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = local.cluster_endpoint
-    token                  = data.google_client_config.default.access_token
-    cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
-  }
 }
 
 module "enable_google_apis" {

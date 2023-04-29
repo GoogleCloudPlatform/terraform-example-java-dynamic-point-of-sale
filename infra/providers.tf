@@ -29,5 +29,28 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.9"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "3.5.1"
+    }
+  }
+}
+
+// Load the default client configuration used by the Google Cloud provider.
+data "google_client_config" "default" {}
+
+provider "google" {
+  project = var.project_id
+}
+
+provider "google-beta" {
+  project = var.project_id
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = local.cluster_endpoint
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
   }
 }
