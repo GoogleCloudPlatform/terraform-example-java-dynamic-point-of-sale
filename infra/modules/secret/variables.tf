@@ -12,23 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "helm_values" {
-  description = "Custom values to be merged into values yaml."
-  default     = []
-  type = list(object({
-    name  = string
-    value = string
-  }))
+variable "project_id" {
+  type        = string
+  description = "The Google Cloud project ID."
 }
 
-variable "helm_secret_values" {
-  description = <<EOF
-    Custom sensitive values to be merged into values yaml. Tt would not be
-    exposed in the terraform plan's diff.
-  EOF
-  default     = []
-  type = list(object({
-    name  = string
-    value = string
-  }))
+variable "sql_user_password" {
+  description = "Default password for user 'jss-pos-user'"
+  type        = string
+}
+
+variable "resource_name_suffix" {
+  type        = string
+  default     = "1"
+  description = <<EOT
+  Optional string added to the end of resource names, allowing project reuse.
+  This should be short and only contain dashes, lowercase letters, and digits.
+  It shoud not end with a dash.
+  EOT
 }
