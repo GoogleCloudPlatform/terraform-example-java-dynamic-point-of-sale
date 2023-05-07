@@ -19,6 +19,25 @@ locals {
   kubernetes_namespace       = "default"
 }
 
+// Load the default client configuration used by the Google Cloud provider.
+data "google_client_config" "default" {}
+
+provider "google" {
+  project = var.project_id
+}
+
+provider "google-beta" {
+  project = var.project_id
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = local.cluster_endpoint
+    token                  = data.google_client_config.default.access_token
+    cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
+  }
+}
+
 module "enable_google_apis" {
   source                      = "terraform-google-modules/project-factory/google//modules/project_services"
   version                     = "~> 14.0"
@@ -102,6 +121,18 @@ module "helm" {
     {
       name  = "service_account"
       value = local.kubernetes_service_account
+    },
+    {
+      name  = "project_id"
+      value = var.project_id
+    },
+    {
+      name  = "spanner_id"
+      value = module.spanner.spanner_instance
+    },
+    {
+      name  = "database"
+      value = module.spanner.spanner_db_name
     },
   ]
   helm_secret_values = []

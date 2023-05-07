@@ -15,3 +15,8 @@
 # This values.yaml file contains default values for the Helm chart.
 loadbalancer_ip: ${LOADBALANCER_IP}
 service_account: ${SERVICE_ACCOUNT}
+
+# Configurations specific to spanner
+project_id: ${PROJECT_ID}
+spanner_id: ${SPANNER_ID}
+database: ${DATABASE}

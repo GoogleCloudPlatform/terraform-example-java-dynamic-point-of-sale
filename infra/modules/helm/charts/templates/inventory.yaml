@@ -58,6 +58,26 @@ spec:
                 configMapKeyRef:
                   name: service-configs
                   key: ITEMS
+            - name: PROJECT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: PROJECT_ID
+            - name: SPANNER_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: SPANNER_ID
+            - name: DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: DATABASE
+            - name: SPANNER_EMULATOR_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: SPANNER_EMULATOR_ENABLED
           resources:
             requests:
               cpu: 100m
