@@ -20,7 +20,7 @@ data:
   PROJECT_ID: "{{ .Values.project_id }}"
   SPANNER_ID: "{{ .Values.spanner_id }}"
   DATABASE: "{{ .Values.database }}"
-  SPANNER_EMULATOR_ENABLED: false
+  SPANNER_EMULATOR_ENABLED: "false"
   INVENTORY_EP: "http://inventory-svc:8080"
   PAYMENTS_EP: "http://payments-svc:8080"
   ACTIVE_ITEM_TYPE: "burgers"
