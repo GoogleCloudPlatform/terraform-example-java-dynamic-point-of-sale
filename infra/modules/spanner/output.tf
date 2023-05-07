@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "db_ip" {
-  description = "The IPv4 address assigned for the master database instance"
-  value       = google_sql_database_instance.jss_pos_db.private_ip_address
+output "spanner_instance" {
+  description = "Name of the spanner instance"
+  value       = google_spanner_instance.jss_pos.name
 }
 
-output "db_user_name" {
-  description = "SQL username for the database"
-  value       = google_sql_user.jss_pos_user.name
+output "spanner_db_name" {
+  description = "Name of the database in the spanner instance"
+  value       = google_spanner_database.jss_pos.name
 }

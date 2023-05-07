@@ -14,3 +14,4 @@
 
 # This values.yaml file contains default values for the Helm chart.
 loadbalancer_ip: ${LOADBALANCER_IP}
+service_account: ${SERVICE_ACCOUNT}

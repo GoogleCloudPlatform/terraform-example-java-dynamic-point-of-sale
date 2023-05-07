@@ -13,8 +13,10 @@
 # limitations under the License.
 
 locals {
-  cluster_endpoint       = "https://${google_container_cluster.jss_pos.endpoint}"
-  cluster_ca_certificate = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
+  cluster_endpoint           = "https://${google_container_cluster.jss_pos.endpoint}"
+  cluster_ca_certificate     = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
+  kubernetes_service_account = "spanner_access_sa"
+  kubernetes_namespace       = "default"
 }
 
 module "enable_google_apis" {
@@ -29,6 +31,7 @@ module "enable_google_apis" {
     "gkehub.googleapis.com",
     "iam.googleapis.com",
     "monitoring.googleapis.com",
+    "spanner.googleapis.com",
   ]
 }
 
@@ -45,14 +48,6 @@ resource "google_compute_network" "jss_pos" {
   project                 = var.project_id
   name                    = "jss-pos-${var.resource_name_suffix}"
   auto_create_subnetworks = true
-}
-
-resource "random_password" "jss_pos" {
-  length           = 20
-  min_lower        = 4
-  min_numeric      = 4
-  min_upper        = 4
-  override_special = "!#%*()-_=+[]{}:?"
 }
 
 resource "google_compute_address" "jss_pos" {
@@ -93,24 +88,6 @@ resource "google_container_cluster" "jss_pos" {
   }
 }
 
-module "database" {
-  depends_on           = [module.enable_google_apis]
-  source               = "./modules/database"
-  region               = var.region
-  private_network_id   = google_compute_network.jss_pos.id
-  sql_user_password    = random_password.jss_pos.result
-  availability_type    = "REGIONAL"
-  resource_name_suffix = var.resource_name_suffix
-}
-
-module "secrets" {
-  depends_on           = [module.enable_google_apis]
-  source               = "./modules/secret"
-  project_id           = var.project_id
-  sql_user_password    = random_password.jss_pos.result
-  resource_name_suffix = var.resource_name_suffix
-}
-
 module "helm" {
   depends_on = [
     google_container_cluster.jss_pos,
@@ -122,6 +99,34 @@ module "helm" {
       name  = "loadbalancer_ip"
       value = google_compute_address.jss_pos.address
     },
+    {
+      name  = "service_account"
+      value = local.kubernetes_service_account
+    },
   ]
   helm_secret_values = []
+}
+
+module "spanner" {
+  depends_on = [module.enable_google_apis]
+  source     = "./modules/spanner"
+  project_id = var.project_id
+}
+
+resource "kubernetes_service_account" "jss_pos" {
+  depends_on = [module.helm]
+  metadata {
+    name      = local.kubernetes_service_account
+    namespace = local.kubernetes_namespace
+    annotations = {
+      "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
+    }
+  }
+}
+
+resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
+  depends_on         = [kubernetes_service_account.jss_pos]
+  service_account_id = google_service_account.jss_pos.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.kubernetes_namespace}/${local.kubernetes_service_account}]"
 }

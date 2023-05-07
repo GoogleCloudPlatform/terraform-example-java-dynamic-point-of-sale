@@ -25,7 +25,7 @@ spec:
       labels:
         app: inventory
     spec:
-      serviceAccountName: default
+      serviceAccountName: "{{ .Values.service_account }}"
       terminationGracePeriodSeconds: 5
       securityContext:
         runAsNonRoot: true
@@ -33,49 +33,49 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       containers:
-      - name: inventory
-        image: us-docker.pkg.dev/point-of-sale-ci/pos-images/inventory:v0.1.0
-        securityContext:
-          privileged: false
-          allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          capabilities:
-            drop:
-              - all
-        env:
-        - name: SPRING_PROFILES_ACTIVE
-          valueFrom:
-            configMapKeyRef:
-              name: spring-profile
-              key: SPRING_PROFILES_ACTIVE
-        - name: ACTIVE_ITEM_TYPE
-          valueFrom:
-            configMapKeyRef:
-              name: service-configs
-              key: ACTIVE_ITEM_TYPE
-        - name: ITEMS
-          valueFrom:
-            configMapKeyRef:
-              name: service-configs
-              key: ITEMS
-        resources:
-          requests:
-            cpu: 100m
-            memory: 512Mi
-          limits:
-            cpu: 500m
-            memory: 1Gi
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 5
-          timeoutSeconds: 10
-        livenessProbe:
-          httpGet:
-            path: /healthy
-            port: 8080
-          initialDelaySeconds: 120
-          periodSeconds: 5
-          timeoutSeconds: 10
+        - name: inventory
+          image: us-docker.pkg.dev/point-of-sale-ci/pos-images/inventory:v0.1.0
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - all
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-profile
+                  key: SPRING_PROFILES_ACTIVE
+            - name: ACTIVE_ITEM_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: ACTIVE_ITEM_TYPE
+            - name: ITEMS
+              valueFrom:
+                configMapKeyRef:
+                  name: service-configs
+                  key: ITEMS
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthy
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 5
+            timeoutSeconds: 10
