@@ -107,10 +107,29 @@ resource "google_container_cluster" "jss_pos" {
   }
 }
 
+resource "kubernetes_service_account" "jss_pos" {
+  depends_on = [google_container_cluster.jss_pos]
+  metadata {
+    name      = local.kubernetes_service_account
+    namespace = local.kubernetes_namespace
+    annotations = {
+      "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
+    }
+  }
+}
+
+resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
+  depends_on         = [kubernetes_service_account.jss_pos]
+  service_account_id = google_service_account.jss_pos.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.kubernetes_namespace}/${local.kubernetes_service_account}]"
+}
+
 module "helm" {
   depends_on = [
     google_container_cluster.jss_pos,
     google_compute_address.jss_pos,
+    kubernetes_service_account.jss_pos,
   ]
   source = "./modules/helm"
   helm_values = [
@@ -142,22 +161,4 @@ module "spanner" {
   depends_on = [module.enable_google_apis]
   source     = "./modules/spanner"
   project_id = var.project_id
-}
-
-resource "kubernetes_service_account" "jss_pos" {
-  depends_on = [module.helm]
-  metadata {
-    name      = local.kubernetes_service_account
-    namespace = local.kubernetes_namespace
-    annotations = {
-      "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
-    }
-  }
-}
-
-resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
-  depends_on         = [kubernetes_service_account.jss_pos]
-  service_account_id = google_service_account.jss_pos.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.kubernetes_namespace}/${local.kubernetes_service_account}]"
 }
