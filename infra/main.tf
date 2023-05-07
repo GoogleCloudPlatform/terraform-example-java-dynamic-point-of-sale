@@ -15,7 +15,7 @@
 locals {
   cluster_endpoint           = "https://${google_container_cluster.jss_pos.endpoint}"
   cluster_ca_certificate     = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
-  kubernetes_service_account = "spanner_access_sa"
+  kubernetes_service_account = "spanner-access-sa"
   kubernetes_namespace       = "default"
 }
 
