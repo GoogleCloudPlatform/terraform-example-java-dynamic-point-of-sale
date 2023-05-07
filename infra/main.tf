@@ -107,6 +107,12 @@ resource "google_container_cluster" "jss_pos" {
   }
 }
 
+resource "kubernetes_secret" "jss_pos" {
+  metadata {
+    name = local.kubernetes_service_account
+  }
+}
+
 resource "kubernetes_service_account" "jss_pos" {
   depends_on = [google_container_cluster.jss_pos]
   metadata {
@@ -115,6 +121,9 @@ resource "kubernetes_service_account" "jss_pos" {
     annotations = {
       "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
     }
+  }
+  secret {
+    name = kubernetes_secret.jss_pos.metadata.0.name
   }
 }
 
@@ -125,11 +134,18 @@ resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
   member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.kubernetes_namespace}/${local.kubernetes_service_account}]"
 }
 
+module "spanner" {
+  depends_on = [module.enable_google_apis]
+  source     = "./modules/spanner"
+  project_id = var.project_id
+}
+
 module "helm" {
   depends_on = [
     google_container_cluster.jss_pos,
     google_compute_address.jss_pos,
     kubernetes_service_account.jss_pos,
+    # module.spanner,
   ]
   source = "./modules/helm"
   helm_values = [
@@ -155,10 +171,4 @@ module "helm" {
     },
   ]
   helm_secret_values = []
-}
-
-module "spanner" {
-  depends_on = [module.enable_google_apis]
-  source     = "./modules/spanner"
-  project_id = var.project_id
 }
