@@ -1,30 +1,32 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Report a bug or error with this repository.
 
 ---
 
-Thanks for stopping by to let us know something could be better!
+<!--
+Thank you for reporting the issue! :)
 
-**PLEASE READ**: If you have a support contract with Google, please create an issue in the [support console](https://cloud.google.com/support/) instead of filing on GitHub. This will ensure a timely response.
+Someone else might have already reported the issue. Please double check the existing list of issues: https://github.com/GoogleCloudPlatform/terraform-ecommerce-microservices-on-gke/issues?q=is%3Aissue
 
-Please run down the following list and make sure you've tried the usual "quick fixes":
+If you have a support contract with Google, please create an issue in the [support console](https://cloud.google.com/support/) instead of filing on GitHub. This will ensure a timely response.
+-->
 
-  - Search the issues already opened: https://github.com/googleapis/synthtool/issues
+### Description
+- What are you seeing and what needs to be done?
 
-If you are still having issues, please be sure to include as much information as possible:
+---
 
-#### Environment details
+### Environment details
 
-  - OS:
-  - Language version:
-  - Package/Project management version:
+- **Operating System:**
+- **Terraform version:**
+- **gcloud version:**
+- **kubectl version:**
 
-#### Steps to reproduce
+---
+
+### Steps to reproduce
 
   1. ?
   2. ?
-
-Making sure to follow these steps will guarantee the quickest resolution possible.
-
-Thanks!
