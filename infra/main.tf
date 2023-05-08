@@ -15,20 +15,21 @@
  */
 
 // Load the default client configuration used by the Google Cloud provider.
-data "google_client_config" "default" {}
+data "google_client_config" "default" {
+  depends_on = [
+    module.gke_cluster
+  ]
+}
 
 
 locals {
-  cluster_endpoint       = "https://${google_container_cluster.jss_pos_cluster.endpoint}"
-  cluster_ca_certificate = google_container_cluster.jss_pos_cluster.master_auth[0].cluster_ca_certificate
+  cluster_endpoint       = "https://${module.gke_cluster.cluster_endpoint}"
+  cluster_ca_certificate = module.gke_cluster.cluster_ca_certificate
 }
 
 provider "google" {
   project = var.project_id
-}
-
-provider "google-beta" {
-  project = var.project_id
+  region  = var.region
 }
 
 provider "helm" {
@@ -75,43 +76,26 @@ resource "google_compute_address" "jss_pos_ip" {
   address_type = "EXTERNAL"
 }
 
-resource "google_container_cluster" "jss_pos_cluster" {
+module "gke_cluster" {
   depends_on = [
     module.enable_google_apis,
     google_compute_address.jss_pos_ip,
   ]
-  # Needed for the google_gkehub_feature Terraform module.
-  provider = google-beta
-  # -----------
-
-  name             = "jss-pos-cluster-${var.resource_name_suffix}"
-  project          = var.project_id
-  location         = var.region
-  enable_autopilot = true
-  resource_labels  = var.labels
-
-  cluster_autoscaling {
-    auto_provisioning_defaults {
-      service_account = google_service_account.jss_pos_service_account.email
-    }
-  }
-
-  ip_allocation_policy {
-    # Need an empty ip_allocation_policy to overcome an error related to autopilot node pool constraints.
-    # Workaround from https://github.com/hashicorp/terraform-provider-google/issues/10782#issuecomment-1024488630
-  }
-
-  node_config {
-    service_account = google_service_account.jss_pos_service_account.email
-  }
+  source          = "./modules/gke-cluster"
+  project_id      = var.project_id
+  region          = var.region
+  name_suffix     = var.resource_name_suffix
+  labels          = var.labels
+  service_account = google_service_account.jss_pos_service_account.email
 }
+
 
 module "helm" {
   depends_on = [
-    google_container_cluster.jss_pos_cluster,
+    module.gke_cluster,
     google_compute_address.jss_pos_ip,
   ]
-  source = "./helm"
+  source = "./modules/helm"
   helm_values = [
     {
       name  = "loadbalancer_ip"
