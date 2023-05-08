@@ -1,8 +1,10 @@
 CREATE TABLE payment_units (
-  id STRING(36) NOT NULL,
-  item_id STRING(36),
-  name STRING(255),
-  quantity FLOAT64,
-  total_cost FLOAT64,
-  version NUMERIC,
-) PRIMARY KEY (id)
+  payment_id STRING(36) NOT NULL,
+  payment_unit_id STRING(36) NOT NULL,
+  item_id STRING(36) NOT NULL,
+  name STRING(1024),
+  quantity NUMERIC,
+  totalcost NUMERIC,
+  version INT64,
+) PRIMARY KEY(payment_id, payment_unit_id),
+INTERLEAVE IN PARENT payments ON DELETE NO ACTION

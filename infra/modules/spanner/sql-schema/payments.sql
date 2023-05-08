@@ -1,6 +1,7 @@
 CREATE TABLE payments (
-  id STRING(36) NOT NULL,
-  paid_amount FLOAT64,
-  type INT64,
-  version NUMERIC,
-) PRIMARY KEY (id)
+  payment_id STRING(36) NOT NULL,
+  unitList STRING(1024),
+  type STRING(1024),
+  paidAmount NUMERIC,
+  version INT64,
+) PRIMARY KEY(payment_id)

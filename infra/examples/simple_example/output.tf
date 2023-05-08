@@ -15,3 +15,7 @@
 output "neos_toc_url" {
   value = module.dynamic_webapp_java_on_gke.neos_toc_url
 }
+
+output "pos_application_url" {
+  value = module.dynamic_webapp_java_on_gke.pos_application_url
+}

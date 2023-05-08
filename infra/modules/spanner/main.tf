@@ -28,10 +28,8 @@ resource "google_spanner_database" "jss_pos" {
   version_retention_period = "3d"
   deletion_protection      = false
   ddl = [
-    "${file("${path.module}/sql-schema/items.sql")}",
-    "${file("${path.module}/sql-schema/labels.sql")}",
-    "${file("${path.module}/sql-schema/payments.sql")}",
-    "${file("${path.module}/sql-schema/payment_units.sql")}",
-    "${file("${path.module}/sql-schema/payments_unit_list.sql")}",
+    file("${path.module}/sql-schema/items.sql"),
+    file("${path.module}/sql-schema/payments.sql"),
+    file("${path.module}/sql-schema/payment_units.sql"),
   ]
 }

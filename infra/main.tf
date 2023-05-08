@@ -83,7 +83,7 @@ resource "google_compute_address" "jss_pos" {
 module "gke_cluster" {
   depends_on = [
     module.enable_google_apis,
-    google_compute_address.jss_pos_ip,
+    google_compute_address.jss_pos,
   ]
   source                   = "./modules/gke-cluster"
   project_id               = var.project_id
