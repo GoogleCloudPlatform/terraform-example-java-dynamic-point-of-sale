@@ -118,5 +118,4 @@ module "helm" {
       value = google_compute_address.jss_pos_ip.address
     },
   ]
-  helm_secret_values = []
 }

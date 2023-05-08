@@ -1,6 +1,6 @@
-# This file controls who is tagged for review for any given pull request.
-#
-# For syntax help see:
-# https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners#codeowners-syntax
+# See https://help.github.com/en/articles/about-code-owners
+# for more info about CODEOWNERS file.
 
-*   @GoogleCloudPlatform/dee-platform-ops
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence.
+*   @GoogleCloudPlatform/blueprint-solutions @Mukamik @GoogleCloudPlatform/dee-platform-ops @shabirmean @Mukamik

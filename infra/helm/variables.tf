@@ -22,15 +22,3 @@ variable "helm_values" {
     value = string
   }))
 }
-
-variable "helm_secret_values" {
-  description = <<EOF
-    Custom sensitive values to be merged into values yaml. Tt would not be
-    exposed in the terraform plan's diff.
-  EOF
-  default     = []
-  type = list(object({
-    name  = string
-    value = string
-  }))
-}

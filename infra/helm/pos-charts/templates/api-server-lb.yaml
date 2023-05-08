@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-<<<<<<<< HEAD:infra/helm/pos-charts/templates/api-server-lb.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -25,16 +24,4 @@ spec:
   - name: http
     port: 80
     targetPort: 8080
-========
-steps:
-- name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  id: 'lint'
-  dir: infra
-  args: ['/usr/local/bin/test_lint.sh']
-tags:
-- 'ci'
-- 'lint'
-substitutions:
-  _DOCKER_IMAGE_DEVELOPER_TOOLS: 'cft/developer-tools'
-  _DOCKER_TAG_VERSION_DEVELOPER_TOOLS: '1'
->>>>>>>> main:build/lint.cloudbuild.yaml
+
