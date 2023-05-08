@@ -13,8 +13,8 @@
 # limitations under the License.
 
 locals {
-  cluster_endpoint           = "https://${google_container_cluster.jss_pos.endpoint}"
-  cluster_ca_certificate     = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
+  cluster_endpoint           = "https://${module.gke_cluster.cluster_endpoint}"
+  cluster_ca_certificate     = module.gke_cluster.cluster_ca_certificate
   kubernetes_service_account = "spanner-access-sa"
   kubernetes_namespace       = "default"
 }
@@ -24,10 +24,7 @@ data "google_client_config" "default" {}
 
 provider "google" {
   project = var.project_id
-}
-
-provider "google-beta" {
-  project = var.project_id
+  region  = var.region
 }
 
 provider "kubernetes" {
@@ -83,52 +80,20 @@ resource "google_compute_address" "jss_pos" {
   address_type = "EXTERNAL"
 }
 
-resource "google_container_cluster" "jss_pos" {
+module "gke_cluster" {
   depends_on = [
     module.enable_google_apis,
-    google_compute_address.jss_pos,
+    google_compute_address.jss_pos_ip,
   ]
-
-  provider         = google-beta # Needed for the google_gkehub_feature Terraform module.
-  name             = "jss-pos-${var.resource_name_suffix}"
-  project          = var.project_id
-  location         = var.region
-  resource_labels  = var.labels
-  network          = google_compute_network.jss_pos.id
-  enable_autopilot = true
-
-  cluster_autoscaling {
-    auto_provisioning_defaults {
-      service_account = google_service_account.jss_pos.email
-    }
-  }
-
-  ip_allocation_policy {
-    # Need an empty ip_allocation_policy to overcome an error related to autopilot node pool constraints.
-    # Workaround from https://github.com/hashicorp/terraform-provider-google/issues/10782#issuecomment-1024488630
-  }
-
-  node_config {
-    service_account = google_service_account.jss_pos.email
-  }
-}
-
-resource "kubernetes_service_account" "jss_pos" {
-  depends_on = [google_container_cluster.jss_pos]
-  metadata {
-    name      = local.kubernetes_service_account
-    namespace = local.kubernetes_namespace
-    annotations = {
-      "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
-    }
-  }
-}
-
-resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
-  depends_on         = [kubernetes_service_account.jss_pos]
-  service_account_id = google_service_account.jss_pos.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.kubernetes_namespace}/${local.kubernetes_service_account}]"
+  source                   = "./modules/gke-cluster"
+  project_id               = var.project_id
+  region                   = var.region
+  name_suffix              = var.resource_name_suffix
+  labels                   = var.labels
+  network                  = google_compute_network.jss_pos.id
+  google_service_account   = google_service_account.jss_pos
+  k8s_service_account_name = local.kubernetes_service_account
+  k8s_namespace            = local.kubernetes_namespace
 }
 
 module "spanner" {
@@ -139,10 +104,9 @@ module "spanner" {
 
 module "helm" {
   depends_on = [
-    google_container_cluster.jss_pos,
-    google_compute_address.jss_pos,
-    kubernetes_service_account.jss_pos,
+    module.gke_cluster,
     module.spanner,
+    google_compute_address.jss_pos,
   ]
   source = "./modules/helm"
   helm_values = [

@@ -12,20 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  required_version = ">= 0.13"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 3.25.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.9"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "2.20.0"
-    }
-  }
-}
+apiVersion: v2
+name: jss-point-of-sale
+description: Helm chart to deploy the Point-of-sale Jump Start Solution to GKE
+
+type: application
+version: 0.0.1
+appVersion: "0.1.0"

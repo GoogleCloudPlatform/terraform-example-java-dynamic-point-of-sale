@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,20 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-terraform {
-  required_version = ">= 0.13"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 3.25.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.9"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "2.20.0"
-    }
-  }
-}
+apiVersion: v1
+kind: Service
+metadata:
+  name: payments-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: payments
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
