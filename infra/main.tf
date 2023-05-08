@@ -15,12 +15,7 @@
  */
 
 // Load the default client configuration used by the Google Cloud provider.
-data "google_client_config" "default" {
-  depends_on = [
-    module.gke_cluster
-  ]
-}
-
+data "google_client_config" "default" {}
 
 locals {
   cluster_endpoint       = "https://${module.gke_cluster.cluster_endpoint}"
