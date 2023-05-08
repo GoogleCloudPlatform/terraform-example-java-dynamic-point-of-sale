@@ -30,6 +30,12 @@ provider "google-beta" {
   project = var.project_id
 }
 
+provider "kubernetes" {
+  host                   = local.cluster_endpoint
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
+}
+
 provider "helm" {
   kubernetes {
     host                   = local.cluster_endpoint
@@ -107,12 +113,6 @@ resource "google_container_cluster" "jss_pos" {
   }
 }
 
-resource "kubernetes_secret" "jss_pos" {
-  metadata {
-    name = local.kubernetes_service_account
-  }
-}
-
 resource "kubernetes_service_account" "jss_pos" {
   depends_on = [google_container_cluster.jss_pos]
   metadata {
@@ -121,9 +121,6 @@ resource "kubernetes_service_account" "jss_pos" {
     annotations = {
       "iam.gke.io/gcp-service-account" = google_service_account.jss_pos.email
     }
-  }
-  secret {
-    name = kubernetes_secret.jss_pos.metadata.0.name
   }
 }
 
@@ -145,7 +142,7 @@ module "helm" {
     google_container_cluster.jss_pos,
     google_compute_address.jss_pos,
     kubernetes_service_account.jss_pos,
-    # module.spanner,
+    module.spanner,
   ]
   source = "./modules/helm"
   helm_values = [
@@ -170,5 +167,4 @@ module "helm" {
       value = module.spanner.spanner_db_name
     },
   ]
-  helm_secret_values = []
 }

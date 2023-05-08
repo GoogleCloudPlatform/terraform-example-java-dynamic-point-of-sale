@@ -21,6 +21,7 @@ spec:
     app: api-server
   type: LoadBalancer
   loadBalancerIP: "{{ .Values.loadbalancer_ip }}"
+  sessionAffinity: ClientIP
   ports:
     - name: http
       port: 80

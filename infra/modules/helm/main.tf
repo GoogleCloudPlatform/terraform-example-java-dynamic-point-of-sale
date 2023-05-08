@@ -27,13 +27,4 @@ resource "helm_release" "jss_point_of_sale" {
       value = entry.value.value
     }
   }
-
-  dynamic "set_sensitive" {
-    for_each = var.helm_secret_values == null ? [] : var.helm_secret_values
-    iterator = secret_entry
-    content {
-      name  = secret_entry.value.name
-      value = secret_entry.value.value
-    }
-  }
 }

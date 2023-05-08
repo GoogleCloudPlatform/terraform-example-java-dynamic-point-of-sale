@@ -14,7 +14,7 @@
 
 output "neos_toc_url" {
   description = "Neos Tutorial URL"
-  value       = "https://console.cloud.google.com/products/solutions/deployments?walkthrough_id=solutions-in-console--java-dynamic-gke--java-dynamic-gke_tour"
+  value       = "https://console.cloud.google.com/products/solutions/deployments?walkthrough_id=solutions-in-console--dynamic-java-webapp--deploy-java-webapp"
 }
 
 output "pos_application_url" {
