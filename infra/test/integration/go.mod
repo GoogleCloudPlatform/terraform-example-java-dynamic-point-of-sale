@@ -1,4 +1,4 @@
-module github.com/GoogleCloudPlatform/terraform-ecommerce-microservices-on-gke/test/integration
+module github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale/test/integration
 
 go 1.19
 

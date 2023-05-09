@@ -23,7 +23,7 @@ locals {
     "roles/iam.serviceAccountUser",
     "roles/resourcemanager.projectIamAdmin",
     "roles/serviceusage.serviceUsageAdmin",
-    "roles/spanner.databaseUser",
+    "roles/spanner.admin",
   ]
 }
 
