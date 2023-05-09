@@ -127,7 +127,7 @@ module "helm" {
       value = module.spanner.spanner_instance
     },
     {
-      name  = "database"
+      name  = "spanner_database"
       value = module.spanner.spanner_db_name
     },
   ]

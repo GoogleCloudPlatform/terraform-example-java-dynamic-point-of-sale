@@ -68,16 +68,11 @@ spec:
                 configMapKeyRef:
                   name: service-configs
                   key: SPANNER_ID
-            - name: DATABASE
+            - name: SPANNER_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: service-configs
-                  key: DATABASE
-            - name: SPANNER_EMULATOR_ENABLED
-              valueFrom:
-                configMapKeyRef:
-                  name: service-configs
-                  key: SPANNER_EMULATOR_ENABLED
+                  key: SPANNER_DATABASE
           resources:
             requests:
               cpu: 100m
