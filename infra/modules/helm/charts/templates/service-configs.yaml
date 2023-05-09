@@ -17,6 +17,9 @@ kind: ConfigMap
 metadata:
   name: service-configs
 data:
+  PROJECT_ID: "{{ .Values.project_id }}"
+  SPANNER_ID: "{{ .Values.spanner_id }}"
+  SPANNER_DATABASE: "{{ .Values.spanner_database }}"
   INVENTORY_EP: "http://inventory-svc:8080"
   PAYMENTS_EP: "http://payments-svc:8080"
   ACTIVE_ITEM_TYPE: "burgers"

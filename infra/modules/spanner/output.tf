@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,5 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This values.yaml file contains default values for the Helm chart.
-loadbalancer_ip: ${LOADBALANCER_IP}
+output "spanner_instance" {
+  description = "Name of the spanner instance"
+  value       = google_spanner_instance.jss_pos.name
+}
+
+output "spanner_db_name" {
+  description = "Name of the database in the spanner instance"
+  value       = google_spanner_database.jss_pos.name
+}

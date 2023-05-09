@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "cluster_endpoint" {
-  value       = google_container_cluster.jss_pos.endpoint
-  description = "The publicly reachable endpoint for the cluster's API server"
-}
-
-output "cluster_ca_certificate" {
-  value       = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
-  description = <<EOF
-  The CA certificate to be used by clients to authenticate the API server
-  EOF
-  sensitive   = true
+terraform {
+  required_version = ">= 0.13"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.53"
+    }
+  }
 }
