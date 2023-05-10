@@ -65,6 +65,13 @@ resource "google_service_account" "jss_pos" {
   project      = var.project_id
 }
 
+resource "google_project_iam_member" "google_service_account_is_spanner_user" {
+  project = var.project_id
+  role    = "roles/spanner.databaseUser"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+
 resource "google_compute_network" "jss_pos" {
   depends_on              = [module.enable_google_apis]
   project                 = var.project_id

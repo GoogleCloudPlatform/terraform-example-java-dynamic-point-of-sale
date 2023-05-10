@@ -22,4 +22,4 @@ kind: ConfigMap
 metadata:
   name: spring-profile
 data:
-  SPRING_PROFILES_ACTIVE: "DATABASE"
+  SPRING_PROFILES_ACTIVE: "jss"
