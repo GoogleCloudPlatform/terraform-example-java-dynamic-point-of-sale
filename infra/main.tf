@@ -41,6 +41,7 @@ provider "helm" {
   }
 }
 
+// Enable all the Google Cloud APIs required for this solution
 module "enable_google_apis" {
   source                      = "terraform-google-modules/project-factory/google//modules/project_services"
   version                     = "~> 14.0"
@@ -57,6 +58,10 @@ module "enable_google_apis" {
   ]
 }
 
+// Create a Google Service Account. This service account will be used by the
+// cluster autoscaler of the Google Kubernetes Engine cluster and by the Point
+// of sale application Pod, when accessing the Cloud Spanner instance. For the
+// latter use-case, Workload Identity is used with a Kubernetes Service Account
 resource "google_service_account" "jss_pos" {
   depends_on   = [module.enable_google_apis]
   account_id   = "jss-pos-${var.resource_name_suffix}"
@@ -65,13 +70,17 @@ resource "google_service_account" "jss_pos" {
   project      = var.project_id
 }
 
+// Add the required roles to the Google Service Account to be used alongside the
+// Kubernetes Service Account to access Spanner via WorkloadIdentity
 resource "google_project_iam_member" "google_service_account_is_spanner_user" {
   project = var.project_id
   role    = "roles/spanner.databaseUser"
   member  = "serviceAccount:${google_service_account.jss_pos.email}"
 }
 
-
+// Create a dedicated Virtual Private Cloud (VPC) network for this solution.
+// This network will be used for any network scoped resources in GCP like the
+// GKE cluster and any load balancers created by Kubernetes Services
 resource "google_compute_network" "jss_pos" {
   depends_on              = [module.enable_google_apis]
   project                 = var.project_id
@@ -79,6 +88,8 @@ resource "google_compute_network" "jss_pos" {
   auto_create_subnetworks = true
 }
 
+// A public external IP address that will be statically attached to the
+// Loadbalancer type Kubernetes Service created for the solution
 resource "google_compute_address" "jss_pos" {
   depends_on   = [module.enable_google_apis]
   name         = "jss-pos-${var.resource_name_suffix}"
@@ -140,6 +151,7 @@ resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
 ########################################################################
 
 resource "google_spanner_instance" "jss_pos" {
+  depends_on   = [module.enable_google_apis]
   config       = "regional-us-central1"
   display_name = "jss-pos"
   project      = var.project_id
@@ -168,6 +180,11 @@ resource "google_spanner_database" "jss_pos" {
 ########################################################################
 
 resource "helm_release" "jss_point_of_sale" {
+  depends_on = [
+    google_container_cluster.jss_pos,
+    google_spanner_database.jss_pos,
+    google_compute_address.jss_pos,
+  ]
   name  = "jss-point-of-sale"
   chart = "${path.module}/charts"
   values = [
