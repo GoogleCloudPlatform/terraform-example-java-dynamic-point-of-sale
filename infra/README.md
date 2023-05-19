@@ -1,4 +1,4 @@
-# Large data sharing Golang web app
+# Dynamic Java Application on GKE
 
 ## Description
 
