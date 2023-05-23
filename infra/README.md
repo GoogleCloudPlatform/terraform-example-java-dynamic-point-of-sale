@@ -22,19 +22,19 @@ The resources/services/activations/deletions that this module will create/trigge
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
-| Name | Description | Type        | Default | Required |
-|------|-------------|-------------|---------|:--------:|
-| project_id | The Google Cloud project ID | `string`    | N/A     |   yes    |
-| region | The Google Cloud region where resources are provisioned. | `string`    | "us-central1"     |   yes    |
-| labels | A set of key/value label pairs to assign to the resources deployed by this blueprint. | map(string) | {"jss" : "up-2-2","application" : "point-of-sale","description" : "dynamic-java-application-gke"}|   yes    |
-| resource_name_suffix | Optional string added to the end of resource names, allowing project reuse.This should be short and only contain dashes, lowercase letters, and digits. It shoud not end with a dash. | `string`    |     "jss" : "up-2-2",     |    no     |
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| labels | A set of key/value label pairs to assign to the resources deployed by this<br>    blueprint. | `map(string)` | <pre>{<br>  "application": "point-of-sale",<br>  "description": "dynamic-java-application-gke",<br>  "jss": "up-2-2"<br>}</pre> | no |
+| project\_id | The Google Cloud project ID. | `string` | n/a | yes |
+| region | The Google Cloud region where resources are provisioned. | `string` | `"us-central1"` | no |
+| resource\_name\_suffix | Optional string added to the end of resource names, allowing project reuse.<br>  This should be short and only contain dashes, lowercase letters, and digits.<br>  It shoud not end with a dash. | `string` | `"1"` | no |
 
 ## Outputs
 
-| Name | Description                              |
-|------|------------------------------------------|
-| neos_toc_url | Neos Tutorial URL                        |
-| pos_application_url | The public URL of the Point-of-sale application                                        |
+| Name | Description |
+|------|-------------|
+| neos\_toc\_url | Neos Tutorial URL |
+| pos\_application\_url | The public URL of the Point-of-sale application |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
