@@ -1,0 +1,80 @@
+# Copyright 2023 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: blueprints.cloud.google.com/v1alpha1
+kind: BlueprintMetadata
+metadata:
+  name: terraform-example-java-dynamic-point-of-sale
+  annotations:
+    config.kubernetes.io/local-config: "true"
+spec:
+  info:
+    title: Large data sharing Golang web app
+    source:
+      repo: https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale.git
+      sourceType: git
+    description:
+      tagline: Point of sale website optimized to scale up quickly, N-tier dynamic webapps embedded in JVM containers.
+      detailed: This solution showcases an N-tier app hosted on GKE and backed by Spanner & Secret Manager as external services. The Vue.js front end is served from Spring Boot's embedded web servers.
+  content:
+    examples:
+    - name: simple_example
+      location: examples/simple_example
+  interfaces:
+    variables:
+    - name: labels
+      description: |2
+            A set of key/value label pairs to assign to the resources deployed by this
+            blueprint.
+      varType: map(string)
+      defaultValue:
+        application: point-of-sale
+        description: dynamic-java-application-gke
+        jss: up-2-2
+    - name: project_id
+      description: The Google Cloud project ID.
+      varType: string
+      required: true
+    - name: region
+      description: The Google Cloud region where resources are provisioned.
+      varType: string
+      defaultValue: us-central1
+    - name: resource_name_suffix
+      description: |2
+          Optional string added to the end of resource names, allowing project reuse.
+          This should be short and only contain dashes, lowercase letters, and digits.
+          It shoud not end with a dash.
+      varType: string
+      defaultValue: "1"
+    outputs:
+    - name: neos_toc_url
+      description: Neos Tutorial URL
+    - name: pos_application_url
+      description: The public URL of the Point-of-sale application
+  requirements:
+    roles:
+    - level: Project
+      roles:
+      - roles/compute.networkAdmin
+      - roles/container.admin
+      - roles/gkehub.editor
+      - roles/iam.serviceAccountAdmin
+      - roles/iam.serviceAccountUser
+      - roles/resourcemanager.projectIamAdmin
+      - roles/serviceusage.serviceUsageAdmin
+      - roles/spanner.admin
+    services:
+    - cloudresourcemanager.googleapis.com
+    - storage-api.googleapis.com
+    - serviceusage.googleapis.com
