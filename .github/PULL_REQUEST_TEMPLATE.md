@@ -11,7 +11,7 @@ Thank you for opening a Pull Request! Before submitting your PR, there are a few
 
 ### Description
 <!-- What are you addressing? -->
-- I found this aweseom bug/improvement I want to contribute
+- I found this awesome bug/improvement I want to contribute
 
 ### Changes
 <!-- What changes did you make to the files -->
