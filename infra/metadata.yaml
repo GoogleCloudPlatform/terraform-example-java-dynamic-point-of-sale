@@ -20,7 +20,7 @@ metadata:
     config.kubernetes.io/local-config: "true"
 spec:
   info:
-    title: Large data sharing Golang web app
+    title: Dynamic Java Application on GKE
     source:
       repo: https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale.git
       sourceType: git
