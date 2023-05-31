@@ -18,7 +18,7 @@ metadata:
   name: terraform-example-java-dynamic-point-of-sale-display
 spec:
   info:
-    title: Large data sharing Golang web app
+    title: Dynamic Java Application on GKE
     source:
       repo: https://github.com/GoogleCloudPlatform/terraform-example-java-dynamic-point-of-sale.git
       sourceType: git
