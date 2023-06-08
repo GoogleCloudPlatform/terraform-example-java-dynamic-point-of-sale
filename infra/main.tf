@@ -156,7 +156,7 @@ resource "google_spanner_instance" "jss_pos" {
   config       = "regional-us-central1"
   display_name = "jss-pos"
   project      = var.project_id
-  num_nodes    = 1
+  processing_units  = 100
   labels       = {}
 }
 
