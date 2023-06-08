@@ -55,6 +55,7 @@ module "enable_google_apis" {
     "iam.googleapis.com",
     "monitoring.googleapis.com",
     "spanner.googleapis.com",
+    "cloudtrace.googleapis.com"
   ]
 }
 
