@@ -107,13 +107,14 @@ resource "google_container_cluster" "jss_pos" {
     module.enable_google_apis,
     google_compute_address.jss_pos,
   ]
-  name             = "jss-pos-cluster-${var.resource_name_suffix}"
-  project          = var.project_id
-  location         = var.region
-  network          = google_compute_network.jss_pos.id
-  enable_autopilot = true
-  node_version     = "1.23.0"
-  resource_labels  = var.labels
+  name               = "jss-pos-cluster-${var.resource_name_suffix}"
+  project            = var.project_id
+  location           = var.region
+  network            = google_compute_network.jss_pos.id
+  enable_autopilot   = true
+  min_master_version = "1.23.0"
+  node_version       = "1.23.0"
+  resource_labels    = var.labels
 
   cluster_autoscaling {
     auto_provisioning_defaults {
