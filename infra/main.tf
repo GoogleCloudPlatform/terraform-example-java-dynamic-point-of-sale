@@ -15,7 +15,7 @@
 locals {
   cluster_endpoint           = "https://${google_container_cluster.jss_pos.endpoint}"
   cluster_ca_certificate     = google_container_cluster.jss_pos.master_auth[0].cluster_ca_certificate
-  kubernetes_service_account = "spanner-access-sa"
+  kubernetes_service_account = "pos-access-sa"
   kubernetes_namespace       = "default"
 }
 
@@ -78,6 +78,24 @@ resource "google_project_iam_member" "google_service_account_is_spanner_user" {
   member  = "serviceAccount:${google_service_account.jss_pos.email}"
 }
 
+resource "google_project_iam_member" "google_service_account_is_trace_agent" {
+  project = var.project_id
+  role    = "roles/cloudtrace.agent"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+resource "google_project_iam_member" "google_service_account_is_monitoring_agent" {
+  project = var.project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+resource "google_project_iam_member" "google_service_account_is_logging_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+  
 // Create a dedicated Virtual Private Cloud (VPC) network for this solution.
 // This network will be used for any network scoped resources in GCP like the
 // GKE cluster and any load balancers created by Kubernetes Services
