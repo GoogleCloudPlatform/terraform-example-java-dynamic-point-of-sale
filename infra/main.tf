@@ -157,6 +157,30 @@ resource "kubernetes_service_account" "jss_pos" {
   }
 }
 
+resource "google_project_iam_member" "jss_pos_role_metric_writer" {
+  project = var.project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+resource "google_project_iam_member" "jss_pos_role_log_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+resource "google_project_iam_member" "jss_pos_role_monitoring_viewer" {
+  project = var.project_id
+  role    = "roles/monitoring.viewer"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
+resource "google_project_iam_member" "jss_pos_role_stackdriver_writer" {
+  project = var.project_id
+  role    = "roles/stackdriver.resourceMetadata.writer"
+  member  = "serviceAccount:${google_service_account.jss_pos.email}"
+}
+
 #-----------------------------------------------------------------------
 
 resource "google_service_account_iam_member" "jss_poss_impersonate_google_sa" {
