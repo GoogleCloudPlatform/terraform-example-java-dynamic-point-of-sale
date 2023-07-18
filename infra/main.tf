@@ -125,12 +125,14 @@ resource "google_container_cluster" "jss_pos" {
     module.enable_google_apis,
     google_compute_address.jss_pos,
   ]
-  name             = "jss-pos-cluster-${var.resource_name_suffix}"
-  project          = var.project_id
-  location         = var.region
-  network          = google_compute_network.jss_pos.id
-  enable_autopilot = true
-  resource_labels  = var.labels
+  name               = "jss-pos-cluster-${var.resource_name_suffix}"
+  project            = var.project_id
+  location           = var.region
+  network            = google_compute_network.jss_pos.id
+  enable_autopilot   = true
+  min_master_version = "1.23.17-gke.8400"
+  node_version       = "1.23.17-gke.8400"
+  resource_labels    = var.labels
 
   cluster_autoscaling {
     auto_provisioning_defaults {
@@ -203,10 +205,10 @@ resource "helm_release" "jss_point_of_sale" {
     google_spanner_database.jss_pos,
     google_compute_address.jss_pos,
   ]
-  name  = "jss-point-of-sale"
-  chart = "${path.module}/charts"
+  name    = "jss-point-of-sale"
+  chart   = "${path.module}/charts"
   timeout = 600
-  values = [
+  values  = [
     file("${path.module}/charts/values.yaml"),
   ]
 
