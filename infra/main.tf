@@ -130,8 +130,6 @@ resource "google_container_cluster" "jss_pos" {
   location           = var.region
   network            = google_compute_network.jss_pos.id
   enable_autopilot   = true
-  min_master_version = "1.23.17-gke.8400"
-  node_version       = "1.23.17-gke.8400"
   resource_labels    = var.labels
 
   cluster_autoscaling {
