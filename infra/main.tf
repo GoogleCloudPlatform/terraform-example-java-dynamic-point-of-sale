@@ -229,7 +229,7 @@ resource "helm_release" "jss_point_of_sale" {
   ]
   name    = "jss-point-of-sale"
   chart   = "${path.module}/charts"
-  timeout = 1200
+  timeout = 4800
   values  = [
     file("${path.module}/charts/values.yaml"),
   ]
