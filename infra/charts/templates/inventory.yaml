@@ -75,10 +75,10 @@ spec:
                   key: SPANNER_DATABASE
           resources:
             requests:
-              cpu: 100m
+              cpu: 250m
               memory: 512Mi
             limits:
-              cpu: 500m
+              cpu: 750m
               memory: 1Gi
           readinessProbe:
             httpGet:
