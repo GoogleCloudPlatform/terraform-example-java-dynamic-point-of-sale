@@ -95,7 +95,7 @@ resource "google_project_iam_member" "google_service_account_is_logging_writer" 
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.jss_pos.email}"
 }
-  
+
 // Create a dedicated Virtual Private Cloud (VPC) network for this solution.
 // This network will be used for any network scoped resources in GCP like the
 // GKE cluster and any load balancers created by Kubernetes Services
