@@ -95,7 +95,7 @@ resource "google_project_iam_member" "google_service_account_is_logging_writer" 
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.jss_pos.email}"
 }
-  
+
 // Create a dedicated Virtual Private Cloud (VPC) network for this solution.
 // This network will be used for any network scoped resources in GCP like the
 // GKE cluster and any load balancers created by Kubernetes Services
@@ -125,12 +125,12 @@ resource "google_container_cluster" "jss_pos" {
     module.enable_google_apis,
     google_compute_address.jss_pos,
   ]
-  name               = "jss-pos-cluster-${var.resource_name_suffix}"
-  project            = var.project_id
-  location           = var.region
-  network            = google_compute_network.jss_pos.id
-  enable_autopilot   = true
-  resource_labels    = var.labels
+  name             = "jss-pos-cluster-${var.resource_name_suffix}"
+  project          = var.project_id
+  location         = var.region
+  network          = google_compute_network.jss_pos.id
+  enable_autopilot = true
+  resource_labels  = var.labels
 
   cluster_autoscaling {
     auto_provisioning_defaults {
@@ -229,8 +229,8 @@ resource "helm_release" "jss_point_of_sale" {
   ]
   name    = "jss-point-of-sale"
   chart   = "${path.module}/charts"
-  timeout = 4800
-  values  = [
+  timeout = 600
+  values = [
     file("${path.module}/charts/values.yaml"),
   ]
 
