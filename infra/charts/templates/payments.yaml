@@ -65,7 +65,7 @@ spec:
                   key: SPANNER_DATABASE
           resources:
             requests:
-              cpu: 250m
+              cpu: 500m
               memory: 512Mi
             limits:
               cpu: 1000m
