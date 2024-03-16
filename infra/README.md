@@ -73,5 +73,3 @@ resources of this module:
 - container.googleapis.com
 - spanner.googleapis.com
 - monitoring.googleapis.com
-
-
