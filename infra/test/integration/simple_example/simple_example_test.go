@@ -28,6 +28,10 @@ func TestSimpleExample(t *testing.T) {
 	example := tft.NewTFBlueprintTest(t)
 
 	example.DefineVerify(func(assert *assert.Assertions) {
+		// DefaultVerify asserts no resource changes exist after apply.
+		// It helps ensure that a second "terraform apply" wouldn't result in resource deletions/replacements.
+		example.DefaultVerify(assert)
+
 		projectId := example.GetTFSetupStringOutput("project_id")
 		testGoogleCloudApis(t, assert, projectId)
 	})
