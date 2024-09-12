@@ -1,5 +1,8 @@
 # Terraform Dynamic Java Application on GKE
 
+This repository contains the Terraform and the Kubernetes YAML deployed by the Jump Start Solution (JSS) titled [Dynamic web application with Java](https://console.cloud.google.com/products/solutions/details/dynamic-java-web-application). 
+The source code for web application ("Point of Sale") deployed by this JSS can be found at [github.com/GoogleCloudPlatform/point-of-sale, in the jss-3.0 branch](https://github.com/GoogleCloudPlatform/point-of-sale/tree/jss-3.0).
+
 ## Quickstart
 
 Try out the Terraform in this repository.
